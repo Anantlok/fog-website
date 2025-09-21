@@ -1,0 +1,11 @@
+
+/* Hides the product card overlay by default. */
+.product-card .overlay {
+opacity: 0;
+transition: opacity 0.3s ease-in-out;
+}
+
+/* Shows the overlay with a smooth transition when you hover over a product card. */
+.product-card:hover .overlay {
+opacity: 1;
+}
