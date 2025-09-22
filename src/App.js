@@ -286,7 +286,7 @@ function App() {
             <header className="bg-white sticky top-0 z-40 shadow-md">
                <nav className="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
                     <div className="flex items-center space-x-2">
-                        <img src={logo} alt="Furniro Logo" className="h-12" />
+                        <img src={logo} alt="Furniro Logo" className="h-6" />
                         <a href="#" className="text-2xl font-bold text-gray-800">Furniro</a>
                     </div>
                     <div className="hidden md:flex items-center space-x-8">
