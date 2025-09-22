@@ -23,7 +23,6 @@ const initialProducts = [
     { id: 16, name: 'Respira Metal', brand: 'Respira', category: 'Table', desc: 'Industrial minimalist coffee table', price: 1200000, oldPrice: null, tag: 'New', tagColor: 'bg-green-500', img: imgRespira },
 ];
 
-// This is a mock API call to simulate fetching data from a server
 const fetchProductsAPI = (params, allProducts) => {
     return new Promise((resolve) => {
         setTimeout(() => {
@@ -59,7 +58,7 @@ const fetchProductsAPI = (params, allProducts) => {
             const paginatedData = data.slice(start, end);
 
             resolve({ products: paginatedData, totalItems });
-        }, 500); // 500ms delay to simulate network latency
+        }, 500); 
     });
 };
 
@@ -287,7 +286,7 @@ function App() {
             <header className="bg-white sticky top-0 z-40 shadow-md">
                <nav className="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
                     <div className="flex items-center space-x-2">
-                        <img src={logo} alt="Furniro Logo" className="h-16" />
+                        <img src={logo} alt="Furniro Logo" className="h-12" />
                         <a href="#" className="text-2xl font-bold text-gray-800">Furniro</a>
                     </div>
                     <div className="hidden md:flex items-center space-x-8">
