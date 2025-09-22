@@ -1,16 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import './App.css';
 
-// The logo is now imported from the 'src' folder directly.
 import logo from './logo.png';
-// UPDATE: Changed the banner import to use a .jpg extension.
 import shopBanner from './assets/shop-banner.jpg';
 import imgSyltherine from './assets/syltherine.png';
 import imgLeviosa from './assets/leviosa.png';
 import imgLolito from './assets/lolito.png';
 import imgRespira from './assets/respira.jpg';
 
-// --- Initial Mock Data ---
 const initialProducts = [
     { id: 1, name: 'Syltherine', brand: 'Syltherine', category: 'Chair', desc: 'Stylish cafe chair', price: 2500000, oldPrice: 3500000, tag: '-30%', tagColor: 'bg-red-500', img: imgSyltherine },
     { id: 2, name: 'Leviosa', brand: 'Leviosa', category: 'Chair', desc: 'Stylish cafe chair', price: 2500000, oldPrice: null, tag: '', tagColor: '', img: imgLeviosa },
@@ -31,12 +28,11 @@ const initialProducts = [
     { id: 17, name: 'Asgaard', brand: 'Syltherine', category: 'Sofa', desc: 'Scandinavian sofa', price: 12000000, oldPrice: null, tag: 'New', tagColor: 'bg-green-500', img: imgLolito },
 ];
 
-// --- API Simulation ---
+// This is a mock API call to simulate fetching data from a server
 const fetchProductsAPI = (params, allProducts) => {
     return new Promise((resolve) => {
         setTimeout(() => {
             let data = [...allProducts];
-
             // Filtering
             if (params.filters.brand && params.filters.brand !== 'all') {
                 data = data.filter(p => p.brand === params.filters.brand);
@@ -68,15 +64,15 @@ const fetchProductsAPI = (params, allProducts) => {
             const paginatedData = data.slice(start, end);
 
             resolve({ products: paginatedData, totalItems });
-        }, 500); // 500ms delay to simulate network
+        }, 500); // 500ms delay to simulate network latency
     });
 };
 
-// --- Reusable Modal Component ---
+// Reusable Modal Component
 const Modal = ({ isOpen, onClose, title, children }) => {
     if (!isOpen) return null;
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center p-4">
             <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-md">
                 <div className="flex justify-between items-center mb-4">
                     <h2 className="text-2xl font-semibold">{title}</h2>
@@ -90,7 +86,7 @@ const Modal = ({ isOpen, onClose, title, children }) => {
     );
 };
 
-// --- Reusable Product Form Component ---
+// Reusable Product Form for Add/Update
 const ProductForm = ({ initialData, onSubmit, onCancel }) => {
     const [formData, setFormData] = useState(initialData);
 
@@ -123,11 +119,29 @@ const ProductForm = ({ initialData, onSubmit, onCancel }) => {
     );
 };
 
+// NEW: Mobile-friendly Filter Modal
+const FilterModal = ({ isOpen, onClose, children }) => {
+    if (!isOpen) return null;
+    return (
+      <div className="fixed inset-0 bg-white z-50 flex flex-col">
+        <div className="flex justify-between items-center p-4 border-b">
+          <h2 className="text-xl font-semibold">Filter & Sort</h2>
+          <button onClick={onClose}><i data-lucide="x"></i></button>
+        </div>
+        <div className="flex-grow p-4 overflow-y-auto">
+          {children}
+        </div>
+        <div className="p-4 border-t">
+          <button onClick={onClose} className="w-full px-4 py-3 bg-[#B88E2F] text-white rounded-lg">Apply</button>
+        </div>
+      </div>
+    );
+};
+
 
 function App() {
-    // State management
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [allProducts, setAllProducts] = useState(initialProducts); // Master list of products
+    const [allProducts, setAllProducts] = useState(initialProducts);
     const [displayedProducts, setDisplayedProducts] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     
@@ -137,14 +151,16 @@ function App() {
     const [currentProduct, setCurrentProduct] = useState(null);
     const newProductInitialData = { name: '', brand: '', category: '', desc: '', price: '' };
 
-    // Server-side state
+    // NEW: Filter modal state for mobile
+    const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+
+    // Filter, Sort, and Pagination State
     const [filters, setFilters] = useState({ brand: 'all', category: 'all', minPrice: '', maxPrice: '' });
     const [sort, setSort] = useState('default');
     const [pagination, setPagination] = useState({ currentPage: 1, itemsPerPage: 8, totalItems: 0 });
 
     const totalPages = Math.ceil(pagination.totalItems / pagination.itemsPerPage);
 
-    // Data fetching logic
     const fetchProducts = useCallback(async () => {
         setIsLoading(true);
         const response = await fetchProductsAPI({ filters, sort, pagination }, allProducts);
@@ -157,28 +173,26 @@ function App() {
         fetchProducts();
     }, [fetchProducts]);
 
-    // Icon rendering
+    
     useEffect(() => {
         if (window.lucide) {
             window.lucide.createIcons();
         }
-    }, [isMenuOpen, isLoading, isAddModalOpen, isUpdateModalOpen]);
+    }, [isMenuOpen, isLoading, isAddModalOpen, isUpdateModalOpen, isFilterModalOpen]);
 
-    // Favicon and Title
     useEffect(() => {
         document.title = "Furniro - Shop";
         const favicon = document.querySelector("link[rel~='icon']");
         if (favicon) favicon.href = logo;
     }, []);
 
-    // --- CRUD Handlers ---
     const handleAddProduct = (productData) => {
         const newProduct = {
             ...productData,
-            id: Date.now(), // Simple unique ID
+            id: Date.now(),
             price: parseInt(productData.price, 10),
             oldPrice: null,
-            img: imgLeviosa, // Use a static image for new products
+            img: imgLeviosa,
         };
         setAllProducts(prev => [newProduct, ...prev]);
         setIsAddModalOpen(false);
@@ -191,7 +205,6 @@ function App() {
     };
 
     const handleDeleteProduct = (productId) => {
-        // A confirmation dialog would be ideal here in a real app
         setAllProducts(prev => prev.filter(p => p.id !== productId));
     };
 
@@ -200,7 +213,6 @@ function App() {
         setIsUpdateModalOpen(true);
     };
 
-    // Other Event Handlers
     const handleFilterChange = (e) => {
         const { name, value } = e.target;
         setFilters(prev => ({ ...prev, [name]: value }));
@@ -231,13 +243,59 @@ function App() {
         backgroundPosition: 'center',
     };
 
+    const filterSortControls = (
+        <div className="space-y-6">
+            <div>
+                <h3 className="font-semibold mb-2">Brands</h3>
+                <select name="brand" value={filters.brand} onChange={handleFilterChange} className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white">
+                    <option value="all">All Brands</option>
+                    {[...new Set(allProducts.map(p => p.brand))].sort().map(brand => <option key={brand} value={brand}>{brand}</option>)}
+                </select>
+            </div>
+            <div>
+                <h3 className="font-semibold mb-2">Categories</h3>
+                <select name="category" value={filters.category} onChange={handleFilterChange} className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white">
+                    <option value="all">All Categories</option>
+                    {[...new Set(allProducts.map(p => p.category))].sort().map(cat => <option key={cat} value={cat}>{cat}</option>)}
+                </select>
+            </div>
+            <div>
+                <h3 className="font-semibold mb-2">Price Range</h3>
+                <div className="flex gap-2">
+                    <input type="number" name="minPrice" placeholder="Min Price" value={filters.minPrice} onChange={handleFilterChange} className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white" />
+                    <input type="number" name="maxPrice" placeholder="Max Price" value={filters.maxPrice} onChange={handleFilterChange} className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white" />
+                </div>
+            </div>
+            <div>
+                <h3 className="font-semibold mb-2">Sort By</h3>
+                <select value={sort} onChange={handleSortChange} className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white">
+                    <option value="default">Default</option>
+                    <option value="name-asc">Name: A-Z</option>
+                    <option value="name-desc">Name: Z-A</option>
+                    <option value="price-asc">Price: Low to High</option>
+                    <option value="price-desc">Price: High to Low</option>
+                </select>
+            </div>
+             <div>
+                <h3 className="font-semibold mb-2">Items Per Page</h3>
+                 <select value={pagination.itemsPerPage} onChange={handleItemsPerPageChange} className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white">
+                    <option value={4}>4</option>
+                    <option value={8}>8</option>
+                    <option value={12}>12</option>
+                    <option value={16}>16</option>
+                </select>
+            </div>
+        </div>
+    );
+
+
     return (
         <div className="bg-white text-gray-800">
             {/* Header */}
             <header className="bg-white sticky top-0 z-40 shadow-md">
                <nav className="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
                     <div className="flex items-center space-x-2">
-                        <img src={logo} alt="Furniro Logo" className="h-8" />
+                        <img src={logo} alt="Furniro Logo" className="h-16" />
                         <a href="#" className="text-2xl font-bold text-gray-800">Furniro</a>
                     </div>
                     <div className="hidden md:flex items-center space-x-8">
@@ -285,30 +343,46 @@ function App() {
 
                 {/* Filter Bar */}
                 <section className="bg-[#F9F1E7] py-4">
-                    <div className="container mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-4">
-                         <div className="flex flex-wrap items-center gap-4">
-                            <button onClick={() => setIsAddModalOpen(true)} className="px-3 py-1 bg-[#B88E2F] text-white rounded-md text-sm">Add Product</button>
-                            <select name="brand" value={filters.brand} onChange={handleFilterChange} className="px-3 py-1 border border-gray-300 rounded-md bg-white text-sm">
-                                <option value="all">All Brands</option>
-                                {[...new Set(allProducts.map(p => p.brand))].sort().map(brand => <option key={brand} value={brand}>{brand}</option>)}
-                            </select>
-                            <select name="category" value={filters.category} onChange={handleFilterChange} className="px-3 py-1 border border-gray-300 rounded-md bg-white text-sm">
-                                <option value="all">All Categories</option>
-                                {[...new Set(allProducts.map(p => p.category))].sort().map(cat => <option key={cat} value={cat}>{cat}</option>)}
-                            </select>
-                             <input type="number" name="minPrice" placeholder="Min Price" value={filters.minPrice} onChange={handleFilterChange} className="w-24 px-3 py-1 border border-gray-300 rounded-md bg-white text-sm" />
-                             <input type="number" name="maxPrice" placeholder="Max Price" value={filters.maxPrice} onChange={handleFilterChange} className="w-24 px-3 py-1 border border-gray-300 rounded-md bg-white text-sm" />
+                    <div className="container mx-auto px-4 sm:px-6">
+                        {/* Mobile Filter Trigger */}
+                        <div className="md:hidden flex justify-between items-center">
+                             <button onClick={() => setIsFilterModalOpen(true)} className="flex items-center space-x-2 font-medium">
+                                <i data-lucide="sliders-horizontal"></i>
+                                <span>Filter & Sort</span>
+                            </button>
+                             <p className="text-gray-500 text-sm">Showing {displayedProducts.length} of {pagination.totalItems}</p>
                         </div>
-                        <div className="flex items-center space-x-4">
-                             <p className="text-gray-500 text-sm">Showing {displayedProducts.length} of {pagination.totalItems} results</p>
-                            <select value={sort} onChange={handleSortChange} className="px-3 py-1 border border-gray-300 rounded-md bg-white text-sm">
-                                <option value="default">Default</option>
-                                <option value="name-asc">Name: A-Z</option>
-                                <option value="name-desc">Name: Z-A</option>
-                                <option value="price-asc">Price: Low to High</option>
-                                <option value="price-desc">Price: High to Low</option>
-                            </select>
-                             <input type="number" value={pagination.itemsPerPage} onChange={handleItemsPerPageChange} className="w-16 px-3 py-1 border border-gray-300 rounded-md bg-white text-sm" />
+                        {/* Desktop Filter Bar */}
+                        <div className="hidden md:flex flex-wrap items-center justify-between gap-4">
+                             <div className="flex flex-wrap items-center gap-4">
+                                <button onClick={() => setIsAddModalOpen(true)} className="px-3 py-1 bg-[#B88E2F] text-white rounded-md text-sm">Add Product</button>
+                                <select name="brand" value={filters.brand} onChange={handleFilterChange} className="px-3 py-1 border border-gray-300 rounded-md bg-white text-sm">
+                                    <option value="all">All Brands</option>
+                                    {[...new Set(allProducts.map(p => p.brand))].sort().map(brand => <option key={brand} value={brand}>{brand}</option>)}
+                                </select>
+                                <select name="category" value={filters.category} onChange={handleFilterChange} className="px-3 py-1 border border-gray-300 rounded-md bg-white text-sm">
+                                    <option value="all">All Categories</option>
+                                    {[...new Set(allProducts.map(p => p.category))].sort().map(cat => <option key={cat} value={cat}>{cat}</option>)}
+                                </select>
+                                 <input type="number" name="minPrice" placeholder="Min Price" value={filters.minPrice} onChange={handleFilterChange} className="w-24 px-3 py-1 border border-gray-300 rounded-md bg-white text-sm" />
+                                 <input type="number" name="maxPrice" placeholder="Max Price" value={filters.maxPrice} onChange={handleFilterChange} className="w-24 px-3 py-1 border border-gray-300 rounded-md bg-white text-sm" />
+                            </div>
+                            <div className="flex items-center space-x-4">
+                                 <p className="text-gray-500 text-sm">Showing {displayedProducts.length} of {pagination.totalItems} results</p>
+                                <select value={sort} onChange={handleSortChange} className="px-3 py-1 border border-gray-300 rounded-md bg-white text-sm">
+                                    <option value="default">Default</option>
+                                    <option value="name-asc">Name: A-Z</option>
+                                    <option value="name-desc">Name: Z-A</option>
+                                    <option value="price-asc">Price: Low to High</option>
+                                    <option value="price-desc">Price: High to Low</option>
+                                </select>
+                                 <select value={pagination.itemsPerPage} onChange={handleItemsPerPageChange} className="px-3 py-1 border border-gray-300 rounded-md bg-white text-sm">
+                                    <option value={4}>4</option>
+                                    <option value={8}>8</option>
+                                    <option value={12}>12</option>
+                                    <option value={16}>16</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -333,7 +407,7 @@ function App() {
                                             </div>
                                         </div>
                                         <div className="absolute inset-0 bg-black bg-opacity-40 flex flex-col items-center justify-center space-y-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                            {/* CRUD Icons on Hover */}
+                                            {}
                                             <div className="flex space-x-4">
                                                 <button onClick={() => openUpdateModal(product)} className="text-white hover:text-[#B88E2F]"><i data-lucide="edit"></i></button>
                                                 <button onClick={() => handleDeleteProduct(product.id)} className="text-white hover:text-red-500"><i data-lucide="trash-2"></i></button>
@@ -346,7 +420,7 @@ function App() {
                     </div>
                 </section>
 
-                {/* Pagination */}
+                {}
                 <section className="pb-8 md:pb-12">
                     <div className="container mx-auto px-4 sm:px-6 flex justify-center items-center space-x-4">
                         <button onClick={() => handlePageChange(pagination.currentPage - 1)} disabled={pagination.currentPage === 1} className="px-4 py-2 bg-[#F9F1E7] text-gray-700 rounded-md disabled:opacity-50">Prev</button>
@@ -357,7 +431,7 @@ function App() {
                     </div>
                 </section>
                 
-                {/* Features Bar */}
+                {}
                 <section className="bg-[#FAF3EA] py-12">
                      <div className="container mx-auto px-4 sm:px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                         <div className="flex items-center justify-center md:justify-start space-x-3"><i data-lucide="award" className="w-10 h-10 text-gray-700"></i><div><h4 className="font-semibold">High Quality</h4><p className="text-sm text-gray-500">crafted from top materials</p></div></div>
@@ -380,7 +454,7 @@ function App() {
                 </div>
             </footer>
 
-            {/* --- Modals for CRUD --- */}
+            {}
             <Modal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} title="Add New Product">
                 <ProductForm initialData={newProductInitialData} onSubmit={handleAddProduct} onCancel={() => setIsAddModalOpen(false)} />
             </Modal>
@@ -390,6 +464,10 @@ function App() {
                     <ProductForm initialData={currentProduct} onSubmit={handleUpdateProduct} onCancel={() => setIsUpdateModalOpen(false)} />
                 )}
             </Modal>
+            
+            <FilterModal isOpen={isFilterModalOpen} onClose={() => setIsFilterModalOpen(false)}>
+                {filterSortControls}
+            </FilterModal>
         </div>
     );
 }
