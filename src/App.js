@@ -9,23 +9,18 @@ import imgLolito from './assets/lolito.png';
 import imgRespira from './assets/respira.jpg';
 
 const initialProducts = [
-    { id: 1, name: 'Syltherine', brand: 'Syltherine', category: 'Chair', desc: 'Stylish cafe chair', price: 2500000, oldPrice: 3500000, tag: '-30%', tagColor: 'bg-red-500', img: imgSyltherine },
-    { id: 2, name: 'Leviosa', brand: 'Leviosa', category: 'Chair', desc: 'Stylish cafe chair', price: 2500000, oldPrice: null, tag: '', tagColor: '', img: imgLeviosa },
-    { id: 3, name: 'Lolito', brand: 'Lolito', category: 'Sofa', desc: 'Luxury big sofa', price: 7000000, oldPrice: 14000000, tag: '-50%', tagColor: 'bg-red-500', img: imgLolito },
-    { id: 4, name: 'Respira', brand: 'Respira', category: 'Stool', desc: 'Outdoor bar table and stool', price: 500000, oldPrice: null, tag: 'New', tagColor: 'bg-green-500', img: imgRespira },
-    { id: 5, name: 'Grifo', brand: 'Syltherine', category: 'Chair', desc: 'Night lamp', price: 1500000, oldPrice: null, tag: '', tagColor: '', img: imgSyltherine },
-    { id: 6, name: 'Muggo', brand: 'Leviosa', category: 'Chair', desc: 'Small mug', price: 150000, oldPrice: null, tag: 'New', tagColor: 'bg-green-500', img: imgLeviosa },
-    { id: 7, name: 'Pingky', brand: 'Lolito', category: 'Sofa', desc: 'Cute bed set', price: 7000000, oldPrice: 14000000, tag: '-50%', tagColor: 'bg-red-500', img: imgLolito },
-    { id: 8, name: 'Potty', brand: 'Respira', category: 'Stool', desc: 'Minimalist flower pot', price: 500000, oldPrice: null, tag: 'New', tagColor: 'bg-green-500', img: imgRespira },
-    { id: 9, name: 'Syltherine II', brand: 'Syltherine', category: 'Chair', desc: 'Stylish cafe chair', price: 2800000, oldPrice: 3800000, tag: '-30%', tagColor: 'bg-red-500', img: imgSyltherine },
-    { id: 10, name: 'Leviosa Classic', brand: 'Leviosa', category: 'Chair', desc: 'Stylish cafe chair', price: 2200000, oldPrice: null, tag: '', tagColor: '', img: imgLeviosa },
-    { id: 11, name: 'Lolito Modern', brand: 'Lolito', category: 'Sofa', desc: 'Luxury big sofa', price: 8000000, oldPrice: 15000000, tag: '-50%', tagColor: 'bg-red-500', img: imgLolito },
-    { id: 12, name: 'Respira Wood', brand: 'Respira', category: 'Stool', desc: 'Outdoor bar table and stool', price: 600000, oldPrice: null, tag: 'New', tagColor: 'bg-green-500', img: imgRespira },
-    { id: 13, name: 'Syltherine Comfort', brand: 'Syltherine', category: 'Chair', desc: 'Stylish cafe chair', price: 3500000, oldPrice: 4500000, tag: '-30%', tagColor: 'bg-red-500', img: imgSyltherine },
-    { id: 14, name: 'Leviosa II', brand: 'Leviosa', category: 'Chair', desc: 'Stylish cafe chair', price: 2900000, oldPrice: null, tag: '', tagColor: '', img: imgLeviosa },
-    { id: 15, name: 'Lolito Grande', brand: 'Lolito', category: 'Sofa', desc: 'Luxury big sofa', price: 9000000, oldPrice: 18000000, tag: '-50%', tagColor: 'bg-red-500', img: imgLolito },
-    { id: 16, name: 'Respira Metal', brand: 'Respira', category: 'Table', desc: 'Minimalist coffee table', price: 1200000, oldPrice: null, tag: 'New', tagColor: 'bg-green-500', img: imgRespira },
-    { id: 17, name: 'Asgaard', brand: 'Syltherine', category: 'Sofa', desc: 'Scandinavian sofa', price: 12000000, oldPrice: null, tag: 'New', tagColor: 'bg-green-500', img: imgLolito },
+    { id: 1, name: 'Syltherine', brand: 'Syltherine', category: 'Chair', desc: 'Modern and elegant cafe chair', price: 2500000, oldPrice: 3500000, tag: '-30%', tagColor: 'bg-red-500', img: imgSyltherine },
+    { id: 2, name: 'Leviosa', brand: 'Leviosa', category: 'Chair', desc: 'Classic wooden dining chair', price: 2500000, oldPrice: null, tag: '', tagColor: '', img: imgLeviosa },
+    { id: 4, name: 'Respira', brand: 'Respira', category: 'Stool', desc: 'Durable outdoor bar stool', price: 500000, oldPrice: null, tag: 'New', tagColor: 'bg-green-500', img: imgRespira },
+    { id: 5, name: 'Grifo', brand: 'Syltherine', category: 'Chair', desc: 'Warm ambient night lamp', price: 1500000, oldPrice: null, tag: '', tagColor: '', img: imgSyltherine },
+    { id: 6, name: 'Leviosa', brand: 'Leviosa', category: 'Chair', desc: 'Comfortable upholstered chair', price: 150000, oldPrice: null, tag: 'New', tagColor: 'bg-green-500', img: imgLeviosa },
+    { id: 8, name: 'Respira', brand: 'Respira', category: 'Stool', desc: 'Sleek minimalist flower pot', price: 500000, oldPrice: null, tag: 'New', tagColor: 'bg-green-500', img: imgRespira },
+    { id: 9, name: 'Syltherine II', brand: 'Syltherine', category: 'Chair', desc: 'Ergonomic and stylish cafe chair', price: 2800000, oldPrice: 3800000, tag: '-30%', tagColor: 'bg-red-500', img: imgSyltherine },
+    { id: 10, name: 'Leviosa Classic', brand: 'Leviosa', category: 'Chair', desc: 'Timeless wooden cafe chair', price: 2200000, oldPrice: null, tag: '', tagColor: '', img: imgLeviosa },
+    { id: 12, name: 'Respira Wood', brand: 'Respira', category: 'Stool', desc: 'Rustic wooden bar stool', price: 600000, oldPrice: null, tag: 'New', tagColor: 'bg-green-500', img: imgRespira },
+    { id: 13, name: 'Syltherine Comfort', brand: 'Syltherine', category: 'Chair', desc: 'Plush and stylish lounge chair', price: 3500000, oldPrice: 4500000, tag: '-30%', tagColor: 'bg-red-500', img: imgSyltherine },
+    { id: 14, name: 'Leviosa II', brand: 'Leviosa', category: 'Chair', desc: 'Modern and versatile dining chair', price: 2900000, oldPrice: null, tag: '', tagColor: '', img: imgLeviosa },
+    { id: 16, name: 'Respira Metal', brand: 'Respira', category: 'Table', desc: 'Industrial minimalist coffee table', price: 1200000, oldPrice: null, tag: 'New', tagColor: 'bg-green-500', img: imgRespira },
 ];
 
 // This is a mock API call to simulate fetching data from a server
@@ -68,7 +63,6 @@ const fetchProductsAPI = (params, allProducts) => {
     });
 };
 
-// Reusable Modal Component
 const Modal = ({ isOpen, onClose, title, children }) => {
     if (!isOpen) return null;
     return (
@@ -85,8 +79,6 @@ const Modal = ({ isOpen, onClose, title, children }) => {
         </div>
     );
 };
-
-// Reusable Product Form for Add/Update
 const ProductForm = ({ initialData, onSubmit, onCancel }) => {
     const [formData, setFormData] = useState(initialData);
 
@@ -119,7 +111,7 @@ const ProductForm = ({ initialData, onSubmit, onCancel }) => {
     );
 };
 
-// NEW: Mobile-friendly Filter Modal
+
 const FilterModal = ({ isOpen, onClose, children }) => {
     if (!isOpen) return null;
     return (
